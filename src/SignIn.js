@@ -12,7 +12,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const SignIn = ({error, signInHandler}) => {
+const SignIn = ({signInHandler}) => {
     const classes = useStyles();
 
     const [email, setEmail] = useState('');
@@ -20,13 +20,13 @@ const SignIn = ({error, signInHandler}) => {
 
     return (
         <div className={classes.paper}>
-            {error && error.errorMessage}
             <Typography component="h1" variant="h5">
                 Sign in
             </Typography>
             <Typography variant="h4" component="h1" gutterBottom>
                 <form>
                     <TextField
+                        size="small"
                         variant="outlined"
                         margin="normal"
                         fullWidth
@@ -39,6 +39,7 @@ const SignIn = ({error, signInHandler}) => {
                         }}
                     />
                     <TextField
+                        size="small"
                         variant="outlined"
                         value={password}
                         margin="normal"

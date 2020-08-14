@@ -30,7 +30,6 @@ const CustomerData = () => {
     let content;
 
     if (loading) {
-        console.log(`Loading`);
         content = <CircularProgress />;
     }
 

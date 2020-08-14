@@ -10,8 +10,20 @@ import CustomerData from './CustomerData';
 import GET_USER_TOKEN from './queries/getUserToken';
 import GET_USER_DETAILS from './queries/getUserDetails';
 import {customerStateVar} from './cache';
+import {makeStyles, Grid, CircularProgress} from '@material-ui/core';
+import Products from './products/productsList';
+
+const useStyles = makeStyles((theme) => ({
+    root: {
+        flexGrow: 1,
+        marginTop: theme.spacing(4),
+        paddingLeft: theme.spacing(8),
+        paddingRight: theme.spacing(8),
+    },
+}));
 
 function App() {
+    const classes = useStyles();
     const [signedIn, setSignedIn] = useState(false);
 
     const [generateCustomerToken, {data, error, loading}] = useMutation(
@@ -43,12 +55,12 @@ function App() {
         });
     }
 
-    if (loading) {
-        content = <p>Signing in...</p>;
+    if (!signedIn) {
+        content = <SignIn signInHandler={signInHandler} />;
     }
 
-    if (userDataLoading) {
-        content = <p>Loading data...</p>;
+    if (loading || userDataLoading) {
+        content = <CircularProgress />;
     }
 
     if (userData) {
@@ -57,17 +69,18 @@ function App() {
             firstname: userData.customer.firstname,
             lastname: userData.customer.lastname,
         });
+        content = <CustomerData />;
     }
 
     return (
-        <Container component="main" maxWidth="xs">
-            {content}
-            {!signedIn && (
-                <SignIn error={error} signInHandler={signInHandler} />
-            )}
-
-            {signedIn && <CustomerData />}
-        </Container>
+        <Grid container spacing={4} justify="center" className={classes.root}>
+            <Grid item xs={3}>
+                {content}
+            </Grid>
+            <Grid item xs>
+                <Products />
+            </Grid>
+        </Grid>
     );
 }
 
