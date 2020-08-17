@@ -2,15 +2,17 @@ import React, {useState} from 'react';
 
 import {useMutation, useLazyQuery} from '@apollo/client';
 
-import Container from '@material-ui/core/Container';
-
 import SignIn from './SignIn';
 import CustomerData from './CustomerData';
 
 import GET_USER_TOKEN from './queries/getUserToken';
 import GET_USER_DETAILS from './queries/getUserDetails';
-import {customerStateVar} from './cache';
+import {isUserLoggedIn} from './queries/localState';
+
+import cache, {customerStateVar} from './cache';
+
 import {makeStyles, Grid, CircularProgress} from '@material-ui/core';
+
 import Products from './products/productsList';
 
 const useStyles = makeStyles((theme) => ({
@@ -64,10 +66,18 @@ function App() {
     }
 
     if (userData) {
+        // we write the data to the local state using a reactive variable
         customerStateVar({
-            isSignedIn: true,
             firstname: userData.customer.firstname,
             lastname: userData.customer.lastname,
+        });
+
+        //...or we can write this data using the cache API
+        cache.writeQuery({
+            query: isUserLoggedIn,
+            data: {
+                isUserLoggedIn: true,
+            },
         });
         content = <CustomerData />;
     }

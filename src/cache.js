@@ -8,9 +8,16 @@ const cache = new InMemoryCache({
     typePolicies: {
         Query: {
             fields: {
-                customerState: {
+                customerData: {
                     read() {
+                        // we'll use this function to read or write data
                         return customerStateVar();
+                    },
+                },
+                customerWishlist: {
+                    read(currentData) {
+                        // this type policy is optional, but highly recommended.
+                        return currentData || {items: []};
                     },
                 },
             },
